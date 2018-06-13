@@ -1,2 +1,2 @@
-# iview-table-input
-双击可以编辑的iview的表格
+# vue-iview
+关于vue-iview的一些杂七杂八
