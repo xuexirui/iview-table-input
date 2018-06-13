@@ -1,0 +1,101 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script src="./node_modules/iview/dist/iview.js"></script>
+    <link rel="stylesheet" href="./node_modules/iview/dist/styles/iview.css">
+</head>
+<body>
+    <div id="app">
+        <i-table :columns="columns" :data="data"></i-table>
+        <button type='primary' size="small"></button>
+    </div>
+    <script>
+        window.openEditor = function (event) {
+            console.log(event);
+            let first = event.currentTarget.firstElementChild;
+            let last = event.currentTarget.lastElementChild;
+            let value = first.innerText;
+            last.value = value;
+            first.style.display = 'none';
+            last.style.display = 'block';
+        }
+
+        window.closeEditor = function(event) {
+            let first = event.currentTarget.parentElement.firstElementChild;
+            let last = event.currentTarget.parentElement.lastElementChild;
+            let value = last.value;
+            first.innerText = value;
+
+            window._v.$bus.emit('saveData', id, value);
+
+            first.style.display = 'block';
+            last.style.display = 'none';
+        }
+
+        function install (Vue) {
+            let _vue = new Vue();
+            Vue.prototype.$bus = {
+                emit(){
+                    _vue.$emit(...arguments);
+                },
+                on() {
+                    _vue.$on(...arguments);
+                }
+            }
+        }
+
+        Vue.use(install);
+
+        window._v = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    columns: [
+                        {
+                            title: 'id',
+                            key: 'id'
+                        },
+                        {
+                            title: '名称',
+                            key: 'name',
+                            type: 'html'
+                        }
+                    ],
+                    data: [
+                        {
+                            id: 1,
+                            name: `<div name='myflag_id' ondblclick="openEditor(event)">
+                                        <span>123</span>
+                                        <input style="display: none" type="text" onblur="closeEditor(event)">
+                                    </div>`
+                        },
+                        {
+                            id: 2,
+                            name: `<div ondblclick="openEditor(event)">
+                                        <span>123</span>
+                                        <input style="display: none" type="text" onblur="closeEditor(event)">
+                                    </div>`
+                        },
+                        {
+                            id: 3,
+                            name: `<div ondblclick="openEditor(event)">
+                                        <span>123</span>
+                                        <input style="display: none" type="text" onblur="closeEditor(event)">
+                                    </div>`
+                        }
+                    ]
+                }
+            },
+            mounted() {
+                this.$bus.on('saveData',(id, value) => {
+                    
+                });
+            }
+        });
+    </script>
+</body>
+</html>
